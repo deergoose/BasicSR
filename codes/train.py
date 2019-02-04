@@ -30,7 +30,7 @@ def main():
         resume_state = None
         util.mkdir_and_rename(opt['path']['experiments_root'])  # rename old folder if exists
         util.mkdirs((path for key, path in opt['path'].items() if not key == 'experiments_root'
-                     and 'pretrain_model' not in key and 'resume' not in key))
+                    and 'pretrain_model' not in key and 'resume' not in key))
 
     # config loggers. Before it, the log will not work
     util.setup_logger(None, opt['path']['log'], 'train', level=logging.INFO, screen=True)
@@ -92,7 +92,8 @@ def main():
         start_epoch = 0
 
     # training
-    logger.info('Start training from epoch: {:d}, iter: {:d}'.format(start_epoch, current_step))
+    logger.info('Start training from epoch: {:d}, iter: {:d}'.format(
+        start_epoch, current_step))
     for epoch in range(start_epoch, total_epochs):
         for _, train_data in enumerate(train_loader):
             current_step += 1

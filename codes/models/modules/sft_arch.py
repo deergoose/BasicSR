@@ -138,8 +138,9 @@ class ACD_VGG_BN_96(nn.Module):
         fea = self.feature(x)
         fea = fea.view(fea.size(0), -1)
         gan = self.gan(fea)
-        cls = self.cls(fea)
-        return [gan, cls]
+        #cls = self.cls(fea)
+        #return [gan, cls]
+        return gan
 
 
 #############################################

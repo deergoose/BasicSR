@@ -7,10 +7,10 @@
 
     "datasets": {
         "train": {
-            "name": "OST",
-            "mode": "LRHRseg_bg",
-            "dataroot_HR": "/mnt/SSD/xtwang/BasicSR_datasets/OST/train/img",
-            "dataroot_HR_bg": "/mnt/SSD/xtwang/BasicSR_datasets/DIV2K800/DIV2K800_sub",
+            "name": "dstl",
+            "mode": "dstl",
+            "dataroot_HR": "/Users/zhoufang/Desktop/lu/dstl",
+            "dataroot_HR_bg": null,
             "dataroot_LR": null,
             "subset_file": null,
             "use_shuffle": true,
@@ -21,9 +21,9 @@
             "use_rot": false
         },
         "val": {
-            "name": "val_OST300_part",
-            "mode": "LRHRseg_bg",
-            "dataroot_HR": "/mnt/SSD/xtwang/BasicSR_datasets/OST/val/img",
+            "name": "dstl",
+            "mode": "dstl",
+            "dataroot_HR": "/Users/zhoufang/Desktop/lu/dstl",
             "dataroot_LR": null
         }
     },
