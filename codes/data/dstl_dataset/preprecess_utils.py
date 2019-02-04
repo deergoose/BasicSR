@@ -49,11 +49,7 @@ def crop_to_shape(data, shape):
 def adjust_size(img, scale):
     assert len(img.shape) == 3
     w, h = img.shape[0], img.shape[1]
-
-    if w % scale > 0:
-        img = img[:w-w%scale, ...]
-    if h % scale > 0:
-        img = img[:, h-h%scale, :]
+    img = img[:w-w%scale, :h-h%scale, :]
     return img
 
 
@@ -75,7 +71,7 @@ def blur(img, scale):
     return img
 
 
-# img = [h, w, c], label = [h, w]
+# img = [h, w, c], label = [h, w, c]
 # rotation is the grain of angles.
 def rand_rotate_and_crop(img, label, crop_size, rotation=8, reflection=True,
         verbose=False):
@@ -84,8 +80,8 @@ def rand_rotate_and_crop(img, label, crop_size, rotation=8, reflection=True,
     angle = 360. * np.random.randint(0, rotation) / rotation
     radian = 2. * np.pi * angle / 360.
     if verbose:
-        print 'Rotation angle : {0}(degree), {1: 0.2f}(radian)'. \
-            format(int(angle), radian)
+        print('Rotation angle : {0}(degree), {1: 0.2f}(radian)'. \
+            format(int(angle), radian))
 
     crop_size_new = int(np.ceil(float(crop_size) * (abs(np.sin(radian)) +
                                 abs(np.cos(radian)))))
@@ -102,8 +98,8 @@ def rand_rotate_and_crop(img, label, crop_size, rotation=8, reflection=True,
     x_base = np.random.randint(0, x_start)
     y_base = np.random.randint(0, y_start)
     if verbose:
-        print 'x_base {} for No. {} image'.format(x_base, id)
-        print 'y_base {} for No. {} image'.format(y_base, id)
+        print('x_base {} for No. {} image'.format(x_base, id))
+        print('y_base {} for No. {} image'.format(y_base, id))
 
     img_crop = img[x_base:x_base+crop_size_new, y_base:y_base+crop_size_new, :]
     label_crop = label[x_base:x_base+crop_size_new, y_base:y_base+crop_size_new, :]
@@ -111,7 +107,7 @@ def rand_rotate_and_crop(img, label, crop_size, rotation=8, reflection=True,
     img_rot = cv2.warpAffine(img_crop, rot_mat,
                             (crop_size_new, crop_size_new))
     label_rot = cv2.warpAffine(label_crop, rot_mat,
-                            (crop_size_new, crop_size_new))[:, :, np.newaxis]
+                            (crop_size_new, crop_size_new))
 
     x_step = 1 if not reflection else [-1, 1][np.random.randint(0, 2)]
     y_step = 1 if not reflection else [-1, 1][np.random.randint(0, 2)]

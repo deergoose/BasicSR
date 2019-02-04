@@ -9,7 +9,7 @@
         "train": {
             "name": "dstl",
             "mode": "dstl",
-            "dataroot_HR": "/Users/zhoufang/Desktop/lu/dstl",
+            "dataroot_HR": "/workspace/dstl_simple",
             "dataroot_HR_bg": null,
             "dataroot_LR": null,
             "subset_file": null,
@@ -23,14 +23,14 @@
         "val": {
             "name": "dstl",
             "mode": "dstl",
-            "dataroot_HR": "/Users/zhoufang/Desktop/lu/dstl",
+            "dataroot_HR": "/workspace/dstl_simple",
             "dataroot_LR": null
         }
     },
     "path": {
-        "root": "/home/xtwang/Projects/BasicSR",
-        "resume_state": null,
-        "pretrain_model_G": "../experiments/pretrained_models/sft_net_ini.pth"
+        "root": "/workspace/BasicSR",
+        "resume_state": null
+        //"pretrain_model_G": "../experiments/pretrained_models/sft_net_ini.pth"
     },
     "network_G": {
         "which_model_G": "sft_arch"

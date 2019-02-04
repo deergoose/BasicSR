@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import random
 import tifffile
 
-from data_utils import *
+from data.dstl_dataset.data_utils import *
 
 
 class ImageData():
@@ -119,8 +119,8 @@ class ImageData():
         polygon_list = {}
         for cl in CLASSES:
             polygon_list[cl] = get_polygon_list(self.image_id, cl)
-            print '{}: {} \t\tcount = {}'.format(
-                cl, CLASSES[cl], len(polygon_list[cl]))
+            print('{}: {} \t\tcount = {}'.format(
+                cl, CLASSES[cl], len(polygon_list[cl])))
 
         legend = plot_polygon(polygon_list = polygon_list, ax = ax)
 
@@ -180,8 +180,8 @@ class ImageData():
         polygon_list = {}
         for cl in CLASSES:
             polygon_list[cl] = get_polygon_list(self.image_id, cl)
-            print '{}: {} \t\tcount = {}'.format(
-                cl, CLASSES[cl], len(polygon_list[cl]))
+            print('{}: {} \t\tcount = {}'.format(
+                cl, CLASSES[cl], len(polygon_list[cl])))
 
         three_band_rescale = scale_percentile(self.three_band_image)
         legend = plot_overlay(

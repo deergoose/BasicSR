@@ -5,8 +5,8 @@ import os
 import pandas as pd
 import torch.utils.data as data
 
-from image_data import ImageData
-from preprecess_utils import adjust_size, blur, rand_rotate_and_crop
+from data.dstl_dataset.image_data import ImageData
+from data.dstl_dataset.preprecess_utils import adjust_size, blur, rand_rotate_and_crop
 
 
 class DstlDataset(data.Dataset):
