@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import pandas as pd
+import torch
 import torch.utils.data as data
 
 from data.dstl_dataset.image_data import ImageData
@@ -56,9 +57,12 @@ class DstlDataset(data.Dataset):
         image_lr = blur(image, self.scale)
 
         return {
-            'LR': image_lr,
-            'HR': image,
-            'seg': label
+            'LR': torch.from_numpy(np.ascontiguousarray(
+                np.transpose(image_lr.astype(np.float), (2, 0, 1)))).float(),
+            'HR': torch.from_numpy(np.ascontiguousarray(
+                np.transpose(image.astype(np.float), (2, 0, 1)))).float(),
+            'seg': torch.from_numpy(np.ascontiguousarray(
+                np.transpose(label.astype(np.float), (2, 0, 1)))).float()
         }
 
 
