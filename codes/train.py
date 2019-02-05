@@ -119,7 +119,7 @@ def main():
                 logger.info(message)
 
             # validation
-            if current_step % opt['train']['val_freq'] == 0:
+            if False: #current_step % opt['train']['val_freq'] == 0:
                 avg_psnr = 0.0
                 idx = 0
                 for val_data in val_loader:

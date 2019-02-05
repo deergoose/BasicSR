@@ -71,6 +71,11 @@ def blur(img, scale):
     return img
 
 
+def downsample(img, scale):
+    assert len(img.shape) == 3
+    return cv2.resize(img, None, fx=1./scale, fy=1./scale, interpolation=cv2.INTER_CUBIC)
+
+
 # img = [h, w, c], label = [h, w, c]
 # rotation is the grain of angles.
 def rand_rotate_and_crop(img, label, crop_size, rotation=8, reflection=True,

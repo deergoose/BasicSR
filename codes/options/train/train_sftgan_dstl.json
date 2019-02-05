@@ -14,7 +14,7 @@
             "dataroot_LR": null,
             "subset_file": null,
             "use_shuffle": true,
-            "n_workers": 8,
+            "n_workers": 2,
             "batch_size": 16,
             "HR_size": 96,
             "use_flip": true,

@@ -7,7 +7,7 @@ import torch
 import torch.utils.data as data
 
 from data.dstl_dataset.image_data import ImageData
-from data.dstl_dataset.preprecess_utils import adjust_size, blur, rand_rotate_and_crop
+from data.dstl_dataset.preprocess_utils import adjust_size, downsample, rand_rotate_and_crop
 
 
 class DstlDataset(data.Dataset):
@@ -24,8 +24,8 @@ class DstlDataset(data.Dataset):
         print(train_names)
         x_crop = 3345
         y_crop = 3338
-        self.scale = opt['scale']
-        self.patch_size = opt['HR_size']
+        self.scale = 4 #opt['scale']
+        self.patch_size = 96 #opt['HR_size']
         self.images = []
         self.labels = []
 
@@ -54,7 +54,7 @@ class DstlDataset(data.Dataset):
         image = adjust_size(image, self.scale)
         label = adjust_size(label, self.scale)
         image, label = rand_rotate_and_crop(image, label, self.patch_size)
-        image_lr = blur(image, self.scale)
+        image_lr = downsample(image, self.scale)
 
         return {
             'LR': torch.from_numpy(np.ascontiguousarray(
