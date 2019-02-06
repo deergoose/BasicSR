@@ -25,7 +25,7 @@
             "mode": "dstl",
             "dataroot_HR": "/workspace/dstl_simple",
             "dataroot_LR": null,
-            "HR_size": 96,
+            "HR_size": 96
         }
     },
     "path": {
