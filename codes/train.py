@@ -109,7 +109,7 @@ def main():
             # log
             if current_step % opt['logger']['print_freq'] == 0:
                 logs = model.get_current_log()
-                message = '<epoch:{:3d}, iter:{:8,d}, lr:{:.3e}> '.format(
+                message = '<epoch:{:d}, iter:{:d}, lr:{:.3e}> '.format(
                     epoch, current_step, model.get_current_learning_rate())
                 for k, v in logs.items():
                     message += '{:s}: {:.4e} '.format(k, v)
