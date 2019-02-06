@@ -21,7 +21,7 @@ class DstlDataset(data.Dataset):
                     skiprows=1, names=['ImageId', 'Xmax', 'Ymin'])
 
         train_names = sorted(train_wkt_v4.ImageId.unique())
-        print(train_names)
+
         x_crop = 3345
         y_crop = 3338
         self.scale = opt['scale']
