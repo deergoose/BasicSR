@@ -94,6 +94,9 @@ def main():
     # training
     logger.info('Start training from epoch: {:d}, iter: {:d}'.format(
         start_epoch, current_step))
+    
+    print_freq = opt['logger']['print_freq']
+    save_checkpoint_freq = opt['logger']['save_checkpoint_freq']
     for epoch in range(start_epoch, total_epochs):
         for _, train_data in enumerate(train_loader):
             current_step += 1
@@ -107,7 +110,7 @@ def main():
             model.optimize_parameters(current_step)
 
             # log
-            if current_step % opt['logger']['print_freq'] == 0:
+            if current_step % print_freq == 0:
                 logs = model.get_current_log()
                 message = '<epoch:{:d}, iter:{:d}, lr:{:.3e}> '.format(
                     epoch, current_step, model.get_current_learning_rate())
@@ -160,7 +163,7 @@ def main():
                     tb_logger.add_scalar('psnr', avg_psnr, current_step)
 
             # save models and training states
-            if current_step % opt['logger']['save_checkpoint_freq'] == 0:
+            if current_step % save_checkpoint_freq == 0:
                 logger.info('Saving models and training states.')
                 model.save(current_step)
                 model.save_training_state(epoch, current_step)
