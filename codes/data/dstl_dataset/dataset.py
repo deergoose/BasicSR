@@ -55,7 +55,7 @@ class DstlDataset(data.Dataset):
         label = adjust_size(label, self.scale)
         image, label = rand_rotate_and_crop(image, label, self.patch_size)
         # TODO(coufon): scale image to [0, 1].
-        image = image/3000.0
+        image = image/2000.0
         image_lr = downsample(image, self.scale)
 
         return {

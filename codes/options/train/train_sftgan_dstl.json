@@ -2,7 +2,7 @@
     "name": "SFTGANx4_dstl",
     "use_tb_logger": false,
     "model": "sftgan",
-    "scale": 4,
+    "scale": 2,
     "gpu_ids": [0],
 
     "datasets": {
@@ -50,9 +50,9 @@
         "lr_steps": [50000, 100000, 150000, 200000],
         "lr_gamma": 0.5,
         "pixel_criterion": "l1",
-        "pixel_weight": 0,
+        "pixel_weight": 1,
         "feature_criterion": "l1",
-        "feature_weight": 1,
+        "feature_weight": 0,
         "gan_type": "vanilla",
         "gan_weight": 5e-3,
 
