@@ -2,7 +2,7 @@
     "name": "SFTGANx4_dstl",
     "use_tb_logger": false,
     "model": "sftgan",
-    "scale": 2,
+    "scale": 4,
     "gpu_ids": [0],
 
     "datasets": {
@@ -15,7 +15,7 @@
             "subset_file": null,
             "use_shuffle": true,
             "n_workers": 2,
-            "batch_size": 16,
+            "batch_size": 32,
             "HR_size": 96,
             "use_flip": true,
             "use_rot": false
@@ -25,7 +25,7 @@
             "mode": "dstl",
             "dataroot_HR": "/workspace/dstl_simple",
             "dataroot_LR": null,
-            "HR_size": 96
+            "HR_size": 144
         }
     },
     "path": {
