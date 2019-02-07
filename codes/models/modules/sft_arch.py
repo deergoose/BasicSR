@@ -62,7 +62,7 @@ class SFT_Net(nn.Module):
         )
 
         self.CondNet = nn.Sequential(
-            nn.Conv2d(10, 128, 4, 4),
+            nn.Conv2d(8, 128, 4, 4),
             nn.LeakyReLU(0.1, True),
             nn.Conv2d(128, 128, 1),
             nn.LeakyReLU(0.1, True),

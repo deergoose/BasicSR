@@ -40,8 +40,12 @@ class DstlDataset(data.Dataset):
             #plt.show()
             #break
 
+            # Reduce the dimension of label classes.
+            image_data.label[:, :, 6] = image_data.label[:, :, 6] + image_data.label[:, :, 7]
+            image_data.label[:, :, 7] = image_data.label[:, :, 8] + image_data.label[:, :, 9] 
+
             self.images.append(image_data.train_feature[:x_crop, :y_crop, :])
-            self.labels.append(image_data.label[:x_crop, :y_crop, :])
+            self.labels.append(image_data.label[:x_crop, :y_crop, :8])
 
         self.total_imgs = len(self.images)
 
