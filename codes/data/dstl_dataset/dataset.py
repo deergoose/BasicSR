@@ -41,11 +41,15 @@ class DstlDataset(data.Dataset):
             #break
 
             # Reduce the dimension of label classes.
-            image_data.label[:, :, 6] = image_data.label[:, :, 6] + image_data.label[:, :, 7]
-            image_data.label[:, :, 7] = image_data.label[:, :, 8] + image_data.label[:, :, 9] 
+            image_data.label[:, :, 0] = image_data.label[:, :, 0] + image_data.label[:, :, 1]
+            image_data.label[:, :, 1] = image_data.label[:, :, 2] + image_data.label[:, :, 3]
+            image_data.label[:, :, 2] = image_data.label[:, :, 4]
+            image_data.label[:, :, 3] = image_data.label[:, :, 5]
+            image_data.label[:, :, 4] = image_data.label[:, :, 6] + image_data.label[:, :, 7]
+            image_data.label[:, :, 5] = image_data.label[:, :, 8] + image_data.label[:, :, 9] 
 
             self.images.append(image_data.train_feature[:x_crop, :y_crop, :])
-            self.labels.append(image_data.label[:x_crop, :y_crop, :8])
+            self.labels.append(image_data.label[:x_crop, :y_crop, :6])
 
         self.total_imgs = len(self.images)
 
@@ -55,11 +59,12 @@ class DstlDataset(data.Dataset):
         image = self.images[rand_idx]
         label = self.labels[rand_idx]
 
-        image = adjust_size(image, self.scale)
-        label = adjust_size(label, self.scale)
+        #image = adjust_size(image, self.scale)
+        #label = adjust_size(label, self.scale)
         image, label = rand_rotate_and_crop(image, label, self.patch_size)
         # TODO(coufon): scale image to [0, 1].
         image = image/2000.0
+        label = label/10.0
         image_lr = downsample(image, self.scale)
 
         return {

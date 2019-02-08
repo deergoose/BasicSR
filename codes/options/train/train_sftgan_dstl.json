@@ -15,23 +15,16 @@
             "subset_file": null,
             "use_shuffle": true,
             "n_workers": 2,
-            "batch_size": 32,
-            "HR_size": 96,
+            "batch_size": 16,
+            "HR_size": 144,
             "use_flip": true,
             "use_rot": false
-        },
-        "val": {
-            "name": "dstl",
-            "mode": "dstl",
-            "dataroot_HR": "/workspace/dstl_simple",
-            "dataroot_LR": null,
-            "HR_size": 144
         }
     },
     "path": {
         "root": "/workspace/BasicSR",
-        "resume_state": null,
-        "pretrain_model_G": "../experiments/pretrained_models/sft_net_ini.pth"
+        "resume_state": null
+        //"pretrain_model_G": "../experiments/pretrained_models/SFTGAN_bicx4_noBN_OST_bg.pth"
     },
     "network_G": {
         "which_model_G": "sft_arch"
@@ -40,16 +33,16 @@
         "which_model_D": "dis_acd"
     },
     "train": {
-        "lr_G": 1e-4,
+        "lr_G": 1e-5,
         "weight_decay_G": 0,
         "beta1_G": 0.9,
-        "lr_D": 1e-4,
+        "lr_D": 1e-5,
         "weight_decay_D": 0,
         "beta1_D": 0.9,
         "lr_scheme": "MultiStepLR",
         "lr_steps": [50000, 100000, 150000, 200000],
         "lr_gamma": 0.5,
-        "pixel_criterion": "l1",
+        "pixel_criterion": "l2",
         "pixel_weight": 1,
         "feature_criterion": "l1",
         "feature_weight": 0,

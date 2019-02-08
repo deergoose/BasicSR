@@ -14,7 +14,7 @@ import options.options as option
 
 
 # model_path = '../experiments/pretrained_models/sft_net_torch.pth' # torch version
-model_path = '../models/206000_G.pth'
+model_path = '/workspace/BasicSR/experiments/SFTGANx4_dstl/models/258000_G.pth'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-opt', type=str, required=True, help='Path to option JSON file.')
@@ -33,15 +33,16 @@ model = model.cuda()
 
 print('sftgan testing...')
 
-for i in range(100):
+for i in range(25):
     data = train_set[i]
     img_HR = data['HR']
     img_LR = data['LR']
     seg = data['seg']
-    output = model((img_LR, seg)).data
+    output = model((img_LR.cuda(), seg.cuda())).data
     
     util.save_img(util.tensor2img(img_HR.squeeze()),
-        os.path.join('../results', 'hr.png'))
+        os.path.join('../results', '{}_hr.png'.format(i)))
 
     util.save_img(util.tensor2img(output.squeeze()),
-        os.path.join('../results', 'fake.png'))
+        os.path.join('../results', '{}_fake.png'.format(i)))
+
