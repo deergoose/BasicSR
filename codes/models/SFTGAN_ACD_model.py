@@ -138,10 +138,10 @@ class SFTGAN_ACD_Model(BaseModel):
                 l_g_total += l_g_fea
             # G gan + cls loss
             #pred_g_fake, cls_g_fake = self.netD(self.fake_H)
-            #pred_g_fake = self.netD(self.fake_H)
-            #l_g_gan = self.l_gan_w * self.cri_gan(pred_g_fake, True)
+            pred_g_fake = self.netD(self.fake_H)
+            l_g_gan = self.l_gan_w * self.cri_gan(pred_g_fake, True)
             #l_g_cls = self.l_gan_w * self.cri_ce(cls_g_fake, self.var_cat)
-            #l_g_total += l_g_gan
+            l_g_total += l_g_gan
             #l_g_total += l_g_cls
 
             l_g_total.backward()
@@ -150,7 +150,6 @@ class SFTGAN_ACD_Model(BaseModel):
             self.optimizer_G_other.step()
 
         # D
-        """
         self.optimizer_D.zero_grad()
         l_d_total = 0
         # real data
@@ -180,7 +179,6 @@ class SFTGAN_ACD_Model(BaseModel):
 
         l_d_total.backward()
         self.optimizer_D.step()
-        """
 
         # set log
         if step % self.D_update_ratio == 0 and step > self.D_init_iters:
@@ -191,7 +189,6 @@ class SFTGAN_ACD_Model(BaseModel):
                 self.log_dict['l_g_fea'] = l_g_fea.item()
             #self.log_dict['l_g_gan'] = l_g_gan.item()
         # D
-        """
         self.log_dict['l_d_real'] = l_d_real.item()
         self.log_dict['l_d_fake'] = l_d_fake.item()
         #self.log_dict['l_d_cls_real'] = l_d_cls_real.item()
@@ -201,7 +198,6 @@ class SFTGAN_ACD_Model(BaseModel):
         # D outputs
         self.log_dict['D_real'] = torch.mean(pred_d_real.detach())
         self.log_dict['D_fake'] = torch.mean(pred_d_fake.detach())
-        """
 
     def test(self):
         self.netG.eval()

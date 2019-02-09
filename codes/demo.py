@@ -45,4 +45,3 @@ for i in range(25):
 
     util.save_img(util.tensor2img(output.squeeze()),
         os.path.join('../results', '{}_fake.png'.format(i)))
-

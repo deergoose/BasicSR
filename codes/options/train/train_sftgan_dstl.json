@@ -3,7 +3,7 @@
     "use_tb_logger": false,
     "model": "sftgan",
     "scale": 4,
-    "gpu_ids": [0],
+    "gpu_ids": [0, 1, 2, 3],
 
     "datasets": {
         "train": {
@@ -15,7 +15,7 @@
             "subset_file": null,
             "use_shuffle": true,
             "n_workers": 2,
-            "batch_size": 16,
+            "batch_size": 64,
             "HR_size": 144,
             "use_flip": true,
             "use_rot": false
@@ -24,7 +24,7 @@
     "path": {
         "root": "/workspace/BasicSR",
         "resume_state": null
-        //"pretrain_model_G": "../experiments/pretrained_models/SFTGAN_bicx4_noBN_OST_bg.pth"
+            //"pretrain_model_G": "../experiments/pretrained_models/SFTGAN_bicx4_noBN_OST_bg.pth"
     },
     "network_G": {
         "which_model_G": "sft_arch"
@@ -40,7 +40,7 @@
         "weight_decay_D": 0,
         "beta1_D": 0.9,
         "lr_scheme": "MultiStepLR",
-        "lr_steps": [50000, 100000, 150000, 200000],
+        "lr_steps": [1e4, 2e4, 3e4, 4e4],
         "lr_gamma": 0.5,
         "pixel_criterion": "l2",
         "pixel_weight": 1,
@@ -55,11 +55,11 @@
         // , "gp_weigth": 10
 
         "manual_seed": 0,
-        "niter": 6e5,
+        "niter": 1e5,
         "val_freq": 2e3
     },
     "logger": {
-        "print_freq": 200,
-        "save_checkpoint_freq": 2e3
+        "print_freq": 1e2,
+        "save_checkpoint_freq": 5e3
     }
 }
