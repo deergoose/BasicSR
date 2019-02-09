@@ -14,17 +14,17 @@
             "dataroot_LR": null,
             "subset_file": null,
             "use_shuffle": true,
-            "n_workers": 2,
+            "n_workers": 1,
             "batch_size": 64,
-            "HR_size": 144,
+            "HR_size": 96,
             "use_flip": true,
             "use_rot": false
         }
     },
     "path": {
         "root": "/workspace/BasicSR",
-        "resume_state": null
-            //"pretrain_model_G": "../experiments/pretrained_models/SFTGAN_bicx4_noBN_OST_bg.pth"
+        "resume_state": null,
+        "pretrain_model_G": "../experiments/pretrained_models/266000_G.pth"
     },
     "network_G": {
         "which_model_G": "sft_arch"
@@ -42,7 +42,7 @@
         "lr_scheme": "MultiStepLR",
         "lr_steps": [1e4, 2e4, 3e4, 4e4],
         "lr_gamma": 0.5,
-        "pixel_criterion": "l1",
+        "pixel_criterion": "l2",
         "pixel_weight": 1,
         "feature_criterion": "l1",
         "feature_weight": 0,

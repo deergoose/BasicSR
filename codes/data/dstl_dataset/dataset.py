@@ -64,6 +64,7 @@ class DstlDataset(data.Dataset):
         image, label = rand_rotate_and_crop(image, label, self.patch_size)
         # TODO(coufon): scale image to [0, 1].
         image = image/2000.0
+        label = label/10.0
         image_lr = downsample(image, self.scale)
 
         return {
@@ -77,4 +78,4 @@ class DstlDataset(data.Dataset):
 
 
     def __len__(self):
-        return self.total_imgs * 538 # number of patches
+        return self.total_imgs * 1211 # number of patches
