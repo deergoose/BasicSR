@@ -77,4 +77,4 @@ class DstlDataset(data.Dataset):
 
 
     def __len__(self):
-        return self.total_imgs * 100
+        return self.total_imgs * 538 # number of patches
