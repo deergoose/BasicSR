@@ -23,9 +23,9 @@
     },
     "path": {
         "root": "/workspace/BasicSR",
-        "resume_state": null
-        //"pretrain_model_G": "../experiments/pretrained_models/60000_G.pth",
-        //"pretrain_model_D": "../experiments/pretrained_models/60000_D.pth"
+        "resume_state": null,
+        "pretrain_model_G": "../experiments/pretrained_models/SFTGANx4_dstl_G/models/80000_G.pth",
+        "pretrain_model_D": "../experiments/pretrained_models/SFTGANx4_dstl_D/models/latest_D.pth"
     },
     "network_G": {
         "which_model_G": "sft_arch"
@@ -34,10 +34,10 @@
         "which_model_D": "dis_acd"
     },
     "train": {
-        "lr_G": 1e-5,
+        "lr_G": 1e-6,
         "weight_decay_G": 0,
         "beta1_G": 0.9,
-        "lr_D": 1e-5,
+        "lr_D": 1e-6,
         "weight_decay_D": 0,
         "beta1_D": 0.9,
         "lr_scheme": "MultiStepLR",
@@ -47,14 +47,12 @@
         "pixel_weight": 1,
         "feature_criterion": "l1",
         "feature_weight": 0,
-        "gan_type": "vanilla",
+        "gan_type": "wgan-gp", //"lsgan",
         "gan_weight": 5e-3,
-
         //for wgan-gp
         // , "D_update_ratio": 1
         //"D_init_iters": 1e4,
-        // , "gp_weigth": 10
-
+        "gp_weigth": 10,
         "manual_seed": 0,
         "niter": 1e5,
         "val_freq": 2e3
