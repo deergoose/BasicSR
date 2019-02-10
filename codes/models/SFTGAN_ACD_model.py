@@ -188,7 +188,7 @@ class SFTGAN_ACD_Model(BaseModel):
                 self.log_dict['l_g_pix'] = l_g_pix.item()
             if self.cri_fea:
                 self.log_dict['l_g_fea'] = l_g_fea.item()
-            self.log_dict['l_g_gan'] = l_g_gan.item()
+            #self.log_dict['l_g_gan'] = l_g_gan.item()
         """
         # D
         self.log_dict['l_d_real'] = l_d_real.item()
