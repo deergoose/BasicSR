@@ -47,12 +47,12 @@
         "pixel_weight": 1,
         "feature_criterion": "l1",
         "feature_weight": 0,
-        "gan_type": "wgan-gp", //"lsgan",
-        "gan_weight": 5e-3,
+        "gan_type": "lsgan",
+        "gan_weight": 1e-4,
         //for wgan-gp
-        // , "D_update_ratio": 1
+        //"D_update_ratio": 1,
         //"D_init_iters": 1e4,
-        "gp_weigth": 10,
+        //"gp_weigth": 10,
         "manual_seed": 0,
         "niter": 1e5,
         "val_freq": 2e3
