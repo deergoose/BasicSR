@@ -73,12 +73,12 @@ def blur(img, scale):
 
 def downsample(img, scale):
     assert len(img.shape) == 3
-    return cv2.resize(img, None, fx=1./scale, fy=1./scale, interpolation=cv2.INTER_AREA)
+    return cv2.resize(img, None, fx=1./scale, fy=1./scale, interpolation=cv2.INTER_CUBIC)
 
 
 # img = [h, w, c], label = [h, w, c]
 # rotation is the grain of angles.
-def rand_rotate_and_crop(img, label, crop_size, rotation=8, reflection=True,
+def rand_rotate_and_crop(img, crop_size, label=None, rotation=8, reflection=True,
         verbose=False):
     x_img, y_img = img.shape[0], img.shape[1]
 
@@ -107,11 +107,7 @@ def rand_rotate_and_crop(img, label, crop_size, rotation=8, reflection=True,
         print('y_base {} for No. {} image'.format(y_base, id))
 
     img_crop = img[x_base:x_base+crop_size_new, y_base:y_base+crop_size_new, :]
-    label_crop = label[x_base:x_base+crop_size_new, y_base:y_base+crop_size_new, :]
-
     img_rot = cv2.warpAffine(img_crop, rot_mat,
-                            (crop_size_new, crop_size_new))
-    label_rot = cv2.warpAffine(label_crop, rot_mat,
                             (crop_size_new, crop_size_new))
 
     x_step = 1 if not reflection else [-1, 1][np.random.randint(0, 2)]
@@ -119,6 +115,10 @@ def rand_rotate_and_crop(img, label, crop_size, rotation=8, reflection=True,
 
     img = img_rot[crop_diff:crop_diff+crop_size:, crop_diff:crop_diff+crop_size, :] \
                 [::x_step, ::y_step, :]
-    label = label_rot[crop_diff:crop_diff+crop_size, crop_diff:crop_diff+crop_size, :] \
-                [::x_step, ::y_step, :]
+
+    if label is not None:
+        label_crop = label[x_base:x_base+crop_size_new, y_base:y_base+crop_size_new, :]
+        label_rot = cv2.warpAffine(label_crop, rot_mat, (crop_size_new, crop_size_new))
+        label = label_rot[crop_diff:crop_diff+crop_size, crop_diff:crop_diff+crop_size, :] \
+                        [::x_step, ::y_step, :]
     return img, label

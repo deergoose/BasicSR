@@ -1,13 +1,25 @@
 import cv2
+from glob import glob
 import numpy as np
-import matplotlib.pyplot as plt
 import os
-import pandas as pd
+#import pandas as pd
 import torch
 import torch.utils.data as data
 
-from data.dstl_dataset.image_data import ImageData
-from data.dstl_dataset.preprocess_utils import adjust_size, downsample, rand_rotate_and_crop
+from image_data import ImageData
+from preprocess_utils import adjust_size, downsample, rand_rotate_and_crop
+
+_x_crop = 3336
+_y_crop = 3336
+
+
+_val_ids = list(range(24, 450, 25)) # val set is 18
+_train_ids = list(set(range(450)) - set(_val_ids)) # train set is 432
+
+pixel_mean = [432.27961319, 468.29362853, 335.24936232]
+pixel_max = 2000.0 #2047
+
+is_vis = True
 
 
 class DstlDataset(data.Dataset):
@@ -15,67 +27,55 @@ class DstlDataset(data.Dataset):
     def __init__(self, opt):
         super(DstlDataset, self).__init__()
         # data_dir = '/Users/zhoufang/Desktop/lu/dstl'
-        data_dir = opt['dataroot_HR']
-        train_wkt_v4 = pd.read_csv(os.path.join(data_dir, 'train_wkt_v4.csv'))
-        grid_sizes = pd.read_csv(os.path.join(data_dir, 'grid_sizes.csv'),
-                    skiprows=1, names=['ImageId', 'Xmax', 'Ymin'])
+        self.data_dir = opt['dataroot_HR']
+        #train_wkt_v4 = pd.read_csv(os.path.join(self.data_dir, 'train_wkt_v4.csv'))
+        #grid_sizes = pd.read_csv(os.path.join(self.data_dir, 'grid_sizes.csv'),
+        #            skiprows=1, names=['ImageId', 'Xmax', 'Ymin'])
 
-        train_names = sorted(train_wkt_v4.ImageId.unique())
+        #self.data_names = sorted(train_wkt_v4.ImageId.unique())
+        all_data_names = glob(os.path.join(self.data_dir, 'three_band/*.tif'))
 
-        x_crop = 3345
-        y_crop = 3338
+        self.data_names = [all_data_names[i] for i in _val_ids] \
+            if 'val' in opt['name'] else [all_data_names[i] for i in _train_ids]
+
         self.scale = opt['scale']
         self.patch_size = opt['HR_size']
-        self.images = []
-        self.labels = []
-
-        for img_id in train_names:
-            image_data = ImageData(data_dir, img_id, grid_sizes, train_wkt_v4)
-            image_data.create_train_feature()
-            image_data.create_label()
-
-            #cv2.imshow('image', (image_data.train_feature[1000:2000, 1000:2000]/3.0).astype(np.uint8))
-            #cv2.waitKey(0)
-            #plt.imshow((image_data.train_feature/3).astype(np.uint8))
-            #plt.show()
-            #break
-
-            # Reduce the dimension of label classes.
-            image_data.label[:, :, 0] = image_data.label[:, :, 0] + image_data.label[:, :, 1]
-            image_data.label[:, :, 1] = image_data.label[:, :, 2] + image_data.label[:, :, 3]
-            image_data.label[:, :, 2] = image_data.label[:, :, 4]
-            image_data.label[:, :, 3] = image_data.label[:, :, 5]
-            image_data.label[:, :, 4] = image_data.label[:, :, 6] + image_data.label[:, :, 7]
-            image_data.label[:, :, 5] = image_data.label[:, :, 8] + image_data.label[:, :, 9] 
-
-            self.images.append(image_data.train_feature[:x_crop, :y_crop, :])
-            self.labels.append(image_data.label[:x_crop, :y_crop, :6])
-
-        self.total_imgs = len(self.images)
+        self.total_imgs = len(self.data_names)
 
 
     def __getitem__(self, index):
-        rand_idx = np.random.randint(self.total_imgs)
-        image = self.images[rand_idx]
-        label = self.labels[rand_idx]
+        data_id = self.data_names[index]
+        image_data = ImageData(self.data_dir, data_id, grid_sizes=None, train_wkt_v4=None)
+        image_data.create_train_feature()
+        image = image_data.train_feature[:, :_y_crop, :_x_crop]
+        image = image.astype(np.float)
 
         #image = adjust_size(image, self.scale)
-        #label = adjust_size(label, self.scale)
-        image, label = rand_rotate_and_crop(image, label, self.patch_size)
+        #image, _ = rand_rotate_and_crop(image, self.patch_size, label=None)
+
         # TODO(coufon): scale image to [0, 1].
-        image = image/2000.0
-        label = label*0.7
+        for i in range(3):
+            image[i, ...] = image[i, ...] - pixel_mean[i]
+        image = image/pixel_max
         image_lr = downsample(image, self.scale)
 
         return {
-            'LR': torch.from_numpy(np.ascontiguousarray(
-                np.transpose(image_lr.astype(np.float), (2, 0, 1)))).float(),
-            'HR': torch.from_numpy(np.ascontiguousarray(
-                np.transpose(image.astype(np.float), (2, 0, 1)))).float(),
-            'seg': torch.from_numpy(np.ascontiguousarray(
-                np.transpose(label.astype(np.float), (2, 0, 1)))).float()
+            'LR': torch.from_numpy(np.ascontiguousarray(image_lr)).float(),
+            'HR': torch.from_numpy(np.ascontiguousarray(image)).float()
+            #'seg': torch.from_numpy(np.ascontiguousarray(
+            #    np.transpose(label.astype(np.float), (2, 0, 1)))).float()
         }
 
 
     def __len__(self):
-        return self.total_imgs * 1211 # number of patches
+        return self.total_imgs # number of patches
+
+
+def _transform_labels(label):
+    # Reduce the dimension of label classes.
+    label[:, :, 0] = label[:, :, 0] + label[:, :, 1]
+    label[:, :, 1] = label[:, :, 2] + label[:, :, 3]
+    label[:, :, 2] = label[:, :, 4]
+    label[:, :, 3] = label[:, :, 5]
+    label[:, :, 4] = label[:, :, 6] + label[:, :, 7]
+    label[:, :, 5] = label[:, :, 8] + label[:, :, 9] 
