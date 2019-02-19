@@ -6,8 +6,8 @@ import os
 import torch
 import torch.utils.data as data
 
-from image_data import ImageData
-from preprocess_utils import adjust_size, downsample, rand_rotate_and_crop
+from data.dstl_dataset.image_data import ImageData
+from data.dstl_dataset.preprocess_utils import adjust_size, downsample, rand_rotate_and_crop
 
 _x_crop = 3336
 _y_crop = 3336

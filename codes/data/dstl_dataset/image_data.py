@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import random
 import tifffile
 
-from data_utils import *
+from data.dstl_dataset.data_utils import *
 
 
 class ImageData():
