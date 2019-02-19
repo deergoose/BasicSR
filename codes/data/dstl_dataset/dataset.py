@@ -47,11 +47,11 @@ class DstlDataset(data.Dataset):
         data_id = self.data_names[index]
         image_data = ImageData(self.data_dir, data_id, grid_sizes=None, train_wkt_v4=None)
         image_data.create_train_feature()
-        image = image_data.train_feature[:, :_y_crop, :_x_crop]
+        image = image_data.train_feature[:_y_crop, :_x_crop, :]
         image = image.astype(np.float)
 
         #image = adjust_size(image, self.scale)
-        #image, _ = rand_rotate_and_crop(image, self.patch_size, label=None)
+        image, _ = rand_rotate_and_crop(image, self.patch_size, label=None)
 
         # TODO(coufon): scale image to [0, 1].
         for i in range(3):
@@ -60,10 +60,10 @@ class DstlDataset(data.Dataset):
         image_lr = downsample(image, self.scale)
 
         return {
-            'LR': torch.from_numpy(np.ascontiguousarray(image_lr)).float(),
-            'HR': torch.from_numpy(np.ascontiguousarray(image)).float()
-            #'seg': torch.from_numpy(np.ascontiguousarray(
-            #    np.transpose(label.astype(np.float), (2, 0, 1)))).float()
+            'LR': torch.from_numpy(np.ascontiguousarray(
+                np.transpose(image_lr, (2, 0, 1)))).float(),
+            'HR': torch.from_numpy(np.ascontiguousarray(
+                np.transpose(image, (2, 0, 1)))).float()
         }
 
 

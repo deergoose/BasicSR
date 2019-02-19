@@ -27,7 +27,6 @@ pixel_max = 0
 print(len(dataset))
 for i in range(len(dataset)):
     im = dataset[i]
-    im = np.transpose(im, (1, 2, 0))
     #print im.shape
     #print np.mean(np.mean(im, axis=1), axis=1)
     #print np.max(im)

@@ -36,7 +36,7 @@ class ImageData():
         :return:
         '''
         # Read data in format (c, w, h)
-        im3 = tifffile.imread(self.image_id)
+        im3 = np.transpose(tifffile.imread(self.image_id), (1, 2, 0))
         #[nx, ny, _] = im3.shape
         #ima = resize(np.transpose(
         #    tifffile.imread('{}/sixteen_band/{}_A.tif'.format(self.data_dir, self.image_id)),
