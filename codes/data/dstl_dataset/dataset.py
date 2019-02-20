@@ -44,7 +44,7 @@ class DstlDataset(data.Dataset):
 
 
     def __getitem__(self, index):
-        data_id = self.data_names[index]
+        data_id = self.data_names[np.random.randint(self.total_imgs)]
         image_data = ImageData(self.data_dir, data_id, grid_sizes=None, train_wkt_v4=None)
         image_data.create_train_feature()
         image = image_data.train_feature[:_y_crop, :_x_crop, :]
@@ -68,7 +68,7 @@ class DstlDataset(data.Dataset):
 
 
     def __len__(self):
-        return self.total_imgs # number of patches
+        return self.total_imgs * 679 # number of patches
 
 
 def _transform_labels(label):

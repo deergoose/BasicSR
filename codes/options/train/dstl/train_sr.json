@@ -12,7 +12,7 @@
             "dataroot_LR": null,
             "subset_file": null,
             "use_shuffle": true,
-            "n_workers": 12,
+            "n_workers": 16,
             "batch_size": 16,
             "HR_size": 128, // 128 | 192
             "use_flip": true,
@@ -44,16 +44,16 @@
     "train": {
         "lr_G": 2e-4,
         "lr_scheme": "MultiStepLR",
-        "lr_steps": [200000, 400000, 600000, 800000],
+        "lr_steps": [20000, 40000, 60000, 80000],
         "lr_gamma": 0.5,
         "pixel_criterion": "l1",
         "pixel_weight": 1.0,
         "val_freq": 5e3,
         "manual_seed": 0,
-        "niter": 1e6
+        "niter": 1e5
     },
     "logger": {
-        "print_freq": 1e3,
-        "save_checkpoint_freq": 5e4
+        "print_freq": 2e2,
+        "save_checkpoint_freq": 5e3
     }
 }
