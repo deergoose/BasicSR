@@ -8,8 +8,9 @@ import torch
 
 from data.util import imresize, modcrop
 import utils.util as util
-import models.modules.sft_arch as sft
-from data.dstl_dataset.test_dataset import DstlDataset
+from models import create_model
+from data.dstl_dataset.dataset import denormalize
+from data.dstl_dataset.dataset_test import DstlDataset
 import options.options as option
 
 
@@ -21,27 +22,25 @@ parser.add_argument('-opt', type=str, required=True, help='Path to option JSON f
 opt = option.parse(parser.parse_args().opt, is_train=True)
 opt = option.dict_to_nonedict(opt)  # Convert to NoneDict, which return None for missing key.
 
-train_set = DstlDataset(opt['datasets']['train'])
+dataset = DstlDataset(opt['datasets']['val'])
 
-if 'torch' in model_path:  # torch version
-    model = sft.SFT_Net_torch()
-else:
-    model = sft.SFT_Net()
+model = create_model(opt).netG
 model.load_state_dict(torch.load(model_path), strict=True)
 model.eval()
 model = model.cuda()
 
 print('sftgan testing...')
 
-for i in range(25):
-    data = train_set[i]
+for data in dataset:
     img_HR = data['HR']
     img_LR = data['LR']
-    seg = data['seg']
-    output = model((img_LR.cuda(), seg.cuda())).data
-    
-    util.save_img(util.tensor2img(img_HR.squeeze()),
-        os.path.join('../results', '{}_hr.png'.format(i)))
+    output = model(img_LR.cuda()).data
 
-    util.save_img(util.tensor2img(output.squeeze()),
-        os.path.join('../results', '{}_fake.png'.format(i)))
+    img_HR = img_HR.cpu().numpy()
+    output = output.cpu().numpy()
+
+    img_HR = denormalize(img_HR)
+    output = denormalize(output)
+    
+    util.save_img(img_HR, os.path.join('../results', '{}_hr.png'.format(i)))
+    util.save_img(output, os.path.join('../results', '{}_fake.png'.format(i)))
