@@ -21,15 +21,16 @@ pixel_max = 2000.0 #2047
 
 def normalize(im):
     for i in range(3):
-        im[..., i] = im[..., i] - pixel_mean[i]
-    im = im/pixel_max
+        im[..., i] -= pixel_mean[i]
+    im /= pixel_max
     return im
 
 def denormalize(im):
-    im = im*pixel_max
+    im = np.transpose(im, (1, 2, 0))
+    im *= pixel_max
     for i in range(3):
-        im[..., i] = im[..., i] + pixel_mean[i]
-    im = im / 2000 * 255
+        im[..., i] += pixel_mean[i]
+    im = im / 2100 * 255
     return im.astype(np.uint8)
 
 

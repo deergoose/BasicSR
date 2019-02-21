@@ -15,7 +15,7 @@ import options.options as option
 
 
 # model_path = '../experiments/pretrained_models/sft_net_torch.pth' # torch version
-model_path = '/workspace/BasicSR/experiments/SFTGANx4_dstl/models/258000_G.pth'
+model_path = '/workspace/100000_G.pth'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-opt', type=str, required=True, help='Path to option JSON file.')
@@ -24,20 +24,21 @@ opt = option.dict_to_nonedict(opt)  # Convert to NoneDict, which return None for
 
 dataset = DstlDataset(opt['datasets']['val'])
 
-model = create_model(opt).netG
+model = create_model(opt).netG.module
 model.load_state_dict(torch.load(model_path), strict=True)
 model.eval()
 model = model.cuda()
 
 print('sftgan testing...')
 
-for data in dataset:
+for i in range(len(dataset)):
+    data = dataset[i]
     img_HR = data['HR']
     img_LR = data['LR']
     output = model(img_LR.cuda()).data
 
-    img_HR = img_HR.cpu().numpy()
-    output = output.cpu().numpy()
+    img_HR = img_HR.numpy()
+    output = output.squeeze().cpu().numpy()
 
     img_HR = denormalize(img_HR)
     output = denormalize(output)

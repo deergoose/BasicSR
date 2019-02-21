@@ -48,7 +48,7 @@ class DstlDataset(data.Dataset):
 
         #image = adjust_size(image, self.scale)
         #image, _ = rand_rotate_and_crop(image, self.patch_size, label=None)
-        image = image[:1000, :1000, :]
+        image = image[:500, :500, :]
 
         # TODO(coufon): scale image to [0, 1].
         image = normalize(image)
@@ -56,7 +56,7 @@ class DstlDataset(data.Dataset):
 
         return {
             'LR': torch.from_numpy(np.ascontiguousarray(
-                np.transpose(image_lr, (2, 0, 1)))).float(),
+                np.transpose(image_lr, (2, 0, 1))[np.newaxis, ...])).float(),
             'HR': torch.from_numpy(np.ascontiguousarray(
                 np.transpose(image, (2, 0, 1)))).float()
         }
