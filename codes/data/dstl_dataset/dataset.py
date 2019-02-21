@@ -19,7 +19,18 @@ _train_ids = list(set(range(450)) - set(_val_ids)) # train set is 432
 pixel_mean = [432.27961319, 468.29362853, 335.24936232]
 pixel_max = 2000.0 #2047
 
-is_vis = True
+def normalize(im):
+    for i in range(3):
+        im[..., i] = im[..., i] - pixel_mean[i]
+    im = im/pixel_max
+    return im
+
+def denormalize(im):
+    im = im*pixel_max
+    for i in range(3):
+        im[..., i] = im[..., i] + pixel_mean[i]
+    im = im / 2000 * 255
+    return im.astype(np.uint8)
 
 
 class DstlDataset(data.Dataset):
@@ -53,10 +64,8 @@ class DstlDataset(data.Dataset):
         #image = adjust_size(image, self.scale)
         image, _ = rand_rotate_and_crop(image, self.patch_size, label=None)
 
-        # TODO(coufon): scale image to [0, 1].
-        for i in range(3):
-            image[i, ...] = image[i, ...] - pixel_mean[i]
-        image = image/pixel_max
+        # TODO(coufon): scale image to [-1, 1].
+        image = normalize(image)
         image_lr = downsample(image, self.scale)
 
         return {
