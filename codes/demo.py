@@ -15,7 +15,7 @@ import options.options as option
 
 
 # model_path = '../experiments/pretrained_models/sft_net_torch.pth' # torch version
-model_path = '/workspace/100000_G.pth'
+model_path = '/workspace/BasicSR/experiments/RRDB_PSNR_x4_DSTL/models/100000_G.pth'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-opt', type=str, required=True, help='Path to option JSON file.')
@@ -42,6 +42,10 @@ for i in range(len(dataset)):
 
     img_HR = denormalize(img_HR)
     output = denormalize(output)
-    
+
+    psnr = util.calculate_psnr(img_HR, output)
+    ssim = util.calculate_ssim(img_HR, output)
+    print(psnr, ssim)
+
     util.save_img(img_HR, os.path.join('../results', '{}_hr.png'.format(i)))
     util.save_img(output, os.path.join('../results', '{}_fake.png'.format(i)))

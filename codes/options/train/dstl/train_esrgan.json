@@ -1,46 +1,36 @@
 {
-    "name": "debug_002_RRDB_ESRGAN_x4_DIV2K" //  please remove "debug_" during training
-        ,
+    "name": "RRDB_ESRGAN_x4_DSTL", //  please remove "debug_" during training
     "use_tb_logger": true,
     "model": "srragan",
     "scale": 4,
-    "gpu_ids": [0]
-
-    ,
+    "gpu_ids": [0, 1, 2, 3],
     "datasets": {
         "train": {
-            "name": "DIV2K",
-            "mode": "LRHR",
-            "dataroot_HR": "/mnt/SSD/xtwang/BasicSR_datasets/DIV2K800/DIV2K800_sub.lmdb",
-            "dataroot_LR": "/mnt/SSD/xtwang/BasicSR_datasets/DIV2K800/DIV2K800_sub_bicLRx4.lmdb",
+            "name": "dstl",
+            "mode": "dstl",
+            "dataroot_HR": "/workspace/dstl",
+            "dataroot_LR": null,
             "subset_file": null,
             "use_shuffle": true,
-            "n_workers": 8,
+            "n_workers": 64,
             "batch_size": 16,
             "HR_size": 128,
             "use_flip": true,
             "use_rot": true
         },
         "val": {
-            "name": "val_set14_part",
-            "mode": "LRHR",
-            "dataroot_HR": "/mnt/SSD/xtwang/BasicSR_datasets/val_set14_part/Set14",
-            "dataroot_LR": "/mnt/SSD/xtwang/BasicSR_datasets/val_set14_part/Set14_bicLRx4"
+            "name": "dstl_val",
+            "mode": "dstl",
+            "dataroot_HR": "/workspace/dstl",
+            "dataroot_LR": null
         }
-    }
-
-    ,
+    },
     "path": {
-        "root": "/home/xtwang/Projects/BasicSR"
-            // , "resume_state": "../experiments/debug_002_RRDB_ESRGAN_x4_DIV2K/training_state/16.state"
-            ,
-        "pretrain_model_G": "../experiments/pretrained_models/RRDB_PSNR_x4.pth"
-    }
-
-    ,
+        "root": "/workspace/BasicSR",
+        "pretrain_model_G": "../experiments/pretrain_models/RRDB_PSNR_x4_100K.pth"
+    },
     "network_G": {
-        "which_model_G": "RRDB_net" // RRDB_net | sr_resnet
-            ,
+        "which_model_G": "RRDB_net", // RRDB_net | sr_resnet
         "norm_type": null,
         "mode": "CNA",
         "nf": 64,
@@ -57,9 +47,7 @@
         "mode": "CNA",
         "nf": 64,
         "in_nc": 3
-    }
-
-    ,
+    },
     "train": {
         "lr_G": 1e-4,
         "weight_decay_G": 0,
@@ -69,30 +57,23 @@
         "beta1_D": 0.9,
         "lr_scheme": "MultiStepLR",
         "lr_steps": [50000, 100000, 200000, 300000],
-        "lr_gamma": 0.5
-
-        ,
+        "lr_gamma": 0.5,
         "pixel_criterion": "l1",
         "pixel_weight": 1e-2,
         "feature_criterion": "l1",
         "feature_weight": 1,
         "gan_type": "vanilla",
-        "gan_weight": 5e-3
-
+        "gan_weight": 5e-3,
         //for wgan-gp
-        // , "D_update_ratio": 1
-        // , "D_init_iters": 0
-        // , "gp_weigth": 10
-
-        ,
+        // "D_update_ratio": 1,
+        "D_init_iters": 1000,
+        // "gp_weigth": 10,
         "manual_seed": 0,
         "niter": 5e5,
         "val_freq": 5e3
-    }
-
-    ,
+    },
     "logger": {
-        "print_freq": 200,
-        "save_checkpoint_freq": 5e3
+        "print_freq": 2e2,
+        "save_checkpoint_freq": 2e4
     }
 }

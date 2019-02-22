@@ -3,7 +3,7 @@
     "use_tb_logger": true,
     "model": "sr",
     "scale": 4,
-    "gpu_ids": [0, 1, 2, 3],
+    "gpu_ids": [0],
     "datasets": {
         "train": {
             "name": "dstl",
@@ -12,7 +12,7 @@
             "dataroot_LR": null,
             "subset_file": null,
             "use_shuffle": true,
-            "n_workers": 16,
+            "n_workers": 64,
             "batch_size": 16,
             "HR_size": 128, // 128 | 192
             "use_flip": true,

@@ -56,6 +56,7 @@ class DstlDataset(data.Dataset):
 
 
     def __getitem__(self, index):
+        np.random.seed(index)
         data_id = self.data_names[np.random.randint(self.total_imgs)]
         image_data = ImageData(self.data_dir, data_id, grid_sizes=None, train_wkt_v4=None)
         image_data.create_train_feature()

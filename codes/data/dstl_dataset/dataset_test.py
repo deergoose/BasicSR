@@ -48,7 +48,7 @@ class DstlDataset(data.Dataset):
 
         #image = adjust_size(image, self.scale)
         #image, _ = rand_rotate_and_crop(image, self.patch_size, label=None)
-        image = image[:500, :500, :]
+        image = image[:800, :800, :]
 
         # TODO(coufon): scale image to [0, 1].
         image = normalize(image)
