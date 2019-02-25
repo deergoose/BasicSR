@@ -27,7 +27,8 @@
     },
     "path": {
         "root": "/workspace/BasicSR",
-        "pretrain_model_G": "../experiments/pretrain_models/RRDB_PSNR_x4_100K.pth"
+        "pretrain_model_G": "../experiments/pretrain_models/RRDB_PSNR_x4_100K.pth",
+        "pretrain_model_D": "../experiments/pretrain_models/d_models/1000_D.pth"
     },
     "network_G": {
         "which_model_G": "RRDB_net", // RRDB_net | sr_resnet
@@ -56,24 +57,24 @@
         "weight_decay_D": 0,
         "beta1_D": 0.9,
         "lr_scheme": "MultiStepLR",
-        "lr_steps": [50000, 100000, 200000, 300000],
+        "lr_steps": [20000, 40000, 60000, 80000],
         "lr_gamma": 0.5,
         "pixel_criterion": "l1",
         "pixel_weight": 1e-2,
         "feature_criterion": "l1",
-        "feature_weight": 1,
+        "feature_weight": 0,
         "gan_type": "vanilla",
         "gan_weight": 5e-3,
         //for wgan-gp
-        // "D_update_ratio": 1,
-        "D_init_iters": 1000,
+        //"D_update_ratio": 1,
+        //"D_init_iters": 1000,
         // "gp_weigth": 10,
         "manual_seed": 0,
-        "niter": 5e5,
+        "niter": 1e5,
         "val_freq": 5e3
     },
     "logger": {
         "print_freq": 2e2,
-        "save_checkpoint_freq": 2e4
+        "save_checkpoint_freq": 5e3
     }
 }

@@ -14,8 +14,8 @@ from data.dstl_dataset.dataset_test import DstlDataset
 import options.options as option
 
 
-# model_path = '../experiments/pretrained_models/sft_net_torch.pth' # torch version
-model_path = '/workspace/BasicSR/experiments/RRDB_PSNR_x4_DSTL/models/100000_G.pth'
+#model_path = '/workspace/BasicSR/experiments/RRDB_PSNR_x4_DSTL/models/100000_G.pth'
+model_path = '/workspace/BasicSR/experiments/RRDB_ESRGAN_x4_DSTL/models/100000_G.pth'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-opt', type=str, required=True, help='Path to option JSON file.')

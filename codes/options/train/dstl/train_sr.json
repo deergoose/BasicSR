@@ -27,8 +27,8 @@
     },
     "path": {
         "root": "/workspace/BasicSR",
-        // , "resume_state": "../experiments/debug_001_RRDB_PSNR_x4_DIV2K/training_state/200.state"
-        "pretrain_model_G": null
+        // "resume_state": "../experiments/debug_001_RRDB_PSNR_x4_DIV2K/training_state/200.state",
+        "pretrain_model_G": "../experiments/pretrain_models/RRDB_PSNR_x4_100K.pth"
     },
     "network_G": {
         "which_model_G": "RRDB_net", // RRDB_net | sr_resnet
