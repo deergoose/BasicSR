@@ -7,10 +7,12 @@ from torch.nn import init
 import models.modules.architecture as arch
 import models.modules.sft_arch as sft_arch
 logger = logging.getLogger('base')
+
+from unet.unet_model import UNet
+
 ####################
 # initialize
 ####################
-
 
 def weights_init_normal(m, std=0.02):
     classname = m.__class__.__name__
@@ -141,14 +143,22 @@ def define_D(opt):
 def define_F(opt, use_bn=False):
     gpu_ids = opt['gpu_ids']
     device = torch.device('cuda' if gpu_ids else 'cpu')
-    # pytorch pretrained VGG19-54, before ReLU.
-    if use_bn:
-        feature_layer = 49
+    
+    if 'unet' in opt and opt['unet'] == True:
+        # Use UNet.
+        netF = UNet(n_channels=3, n_classes=10)
     else:
-        feature_layer = 34
-    netF = arch.VGGFeatureExtractor(feature_layer=feature_layer, use_bn=use_bn, \
-        use_input_norm=True, device=device)
-    # netF = arch.ResNet101FeatureExtractor(use_input_norm=True, device=device)
+        # pytorch pretrained VGG19-54, before ReLU.
+        if use_bn:
+            feature_layer = 49
+        else:
+            feature_layer = 34
+        netF = arch.VGGFeatureExtractor(
+            feature_layer=feature_layer,
+            use_bn=use_bn,
+            use_input_norm=True,
+            device=device)
+        # netF = arch.ResNet101FeatureExtractor(use_input_norm=True, device=device)
     if gpu_ids:
         netF = nn.DataParallel(netF)
     netF.eval()  # No need to train
