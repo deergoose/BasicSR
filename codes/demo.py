@@ -15,7 +15,7 @@ import options.options as option
 
 
 #model_path = '/workspace/BasicSR/experiments/RRDB_PSNR_x4_DSTL/models/100000_G.pth'
-model_path = '/workspace/BasicSR/experiments/RRDB_ESRGAN_x4_DSTL/models/100000_G.pth'
+model_path = '/workspace/BasicSR/experiments/100000_G.pth'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-opt', type=str, required=True, help='Path to option JSON file.')
