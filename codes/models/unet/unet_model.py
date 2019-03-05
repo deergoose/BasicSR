@@ -2,7 +2,7 @@
 
 import torch.nn.functional as F
 
-from unet_parts import *
+from models.unet.unet_parts import *
 
 
 class UNet(nn.Module):
@@ -25,9 +25,9 @@ class UNet(nn.Module):
         x3 = self.down2(x2)
         x4 = self.down3(x3)
         x5 = self.down4(x4)
-        x = self.up1(x5, x4)
-        x = self.up2(x, x3)
-        x = self.up3(x, x2)
-        x = self.up4(x, x1)
-        x = self.outc(x)
-        return F.sigmoid(x)
+        #x = self.up1(x5, x4)
+        #x = self.up2(x, x3)
+        #x = self.up3(x, x2)
+        #x = self.up4(x, x1)
+        #x = self.outc(x)
+        return x5 #F.sigmoid(x)

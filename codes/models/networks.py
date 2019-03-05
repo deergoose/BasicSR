@@ -8,7 +8,7 @@ import models.modules.architecture as arch
 import models.modules.sft_arch as sft_arch
 logger = logging.getLogger('base')
 
-from unet.unet_model import UNet
+from models.unet.unet_model import UNet
 
 ####################
 # initialize
