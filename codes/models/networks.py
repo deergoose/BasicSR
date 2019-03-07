@@ -147,6 +147,8 @@ def define_F(opt, use_bn=False):
     if 'unet' in opt and opt['unet'] == True:
         # Use UNet.
         netF = UNet(n_channels=3, n_classes=10)
+        unet_model_path = opt['unet_model']
+        netF.load_state_dict(torch.load(unet_model_path))
     else:
         # pytorch pretrained VGG19-54, before ReLU.
         if use_bn:

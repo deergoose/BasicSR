@@ -4,6 +4,8 @@
     "model": "srragan",
     "scale": 4,
     "gpu_ids": [0, 1, 2, 3],
+    "unet": true,
+    "unet_model": "../experiments/pretrain_models/unet/CP_170.pth",
     "datasets": {
         "train": {
             "name": "dstl",
