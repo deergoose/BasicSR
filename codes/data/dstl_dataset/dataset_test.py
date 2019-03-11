@@ -30,7 +30,7 @@ class DstlDataset(data.Dataset):
 
         #self.data_names = sorted(train_wkt_v4.ImageId.unique())
         all_data_names = glob(os.path.join(self.data_dir, 'three_band/*.tif'))
-
+	all_data_names.sort()
         self.data_names = [all_data_names[i] for i in _train_ids] \
             if opt['phase'] == 'train' else [all_data_names[i] for i in _val_ids]
 
