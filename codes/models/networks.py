@@ -149,6 +149,10 @@ def define_F(opt, use_bn=False):
         netF = UNet(n_channels=3, n_classes=10)
         unet_model_path = opt['unet_model']
         netF.load_state_dict(torch.load(unet_model_path))
+    elif 'pnasnet' in opt and opt['pnasnet'] == True:
+        netF = arch.PNasNetFeatureExtractor(
+            use_input_norm=True,
+            device=device)
     else:
         # pytorch pretrained VGG19-54, before ReLU.
         if use_bn:
