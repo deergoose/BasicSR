@@ -1,6 +1,7 @@
 import math
 import torch
 import torch.nn as nn
+import torch.utils.model_zoo as model_zoo
 import torchvision
 from . import block as B
 from . import spectral_norm as SN
@@ -10,7 +11,6 @@ import pretrainedmodels.models.pnasnet as pnasnet
 ####################
 # Generator
 ####################
-
 
 class SRResNet(nn.Module):
     def __init__(self, in_nc, out_nc, nf, nb, upscale=4, norm_type='batch', act_type='relu', \

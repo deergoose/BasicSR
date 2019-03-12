@@ -4,8 +4,9 @@
     "model": "srragan",
     "scale": 4,
     "gpu_ids": [0, 1, 2, 3],
-    "unet": true,
-    "unet_model": "../experiments/pretrain_models/unet/CP_170.pth",
+    "pnasnet": true,
+    //"unet": true,
+    //"unet_model": "../experiments/pretrain_models/unet/CP_170.pth",
     "datasets": {
         "train": {
             "name": "dstl",
@@ -14,7 +15,7 @@
             "dataroot_LR": null,
             "subset_file": null,
             "use_shuffle": true,
-            "n_workers": 64,
+            "n_workers": 32,
             "batch_size": 16,
             "HR_size": 128,
             "use_flip": true,
