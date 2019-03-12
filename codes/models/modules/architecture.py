@@ -335,8 +335,8 @@ class PNasNetFeatureExtractor(nn.Module):
                  device=torch.device('cpu')):
         super(PNasNetFeatureExtractor, self).__init__()
         self.use_input_norm = use_input_norm
-        self.model = pnasnet.PNASNet5Large(num_classes=1001)
-        self.model.load_state_dict(model_zoo.load_url(
+        self.model = nn.DataParallel(pnasnet.PNASNet5Large(num_classes=1001))
+        self.model.module.load_state_dict(model_zoo.load_url(
             'http://data.lip6.fr/cadene/pretrainedmodels/pnasnet5large-bf079911.pth'))
         if self.use_input_norm:
             mean = torch.Tensor([0.5-1, 0.5-1, 0.5-1]).view(1, 3, 1, 1).to(device)
@@ -345,9 +345,9 @@ class PNasNetFeatureExtractor(nn.Module):
             # [0.5*2, 0.5*2, 0.5*2] if input in range [-1,1]
             self.register_buffer('mean', mean)
             self.register_buffer('std', std)
-        self.features = self.model.features
+        self.features = self.model.module.features
         # No need to BP to variable
-        for k, v in self.model.named_parameters():
+        for k, v in self.model.module.named_parameters():
             v.requires_grad = False
 
     def forward(self, x):
