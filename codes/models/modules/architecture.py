@@ -7,7 +7,7 @@ import torchvision
 from . import block as B
 from . import spectral_norm as SN
 
-import from pretrainedmodels.models.pnasnet as pnasnet
+import pretrainedmodels.models.pnasnet as pnasnet
 from pretrainedmodels.models.pnasnet import CellStem0, Cell
 
 ####################
@@ -298,20 +298,13 @@ class Discriminator_Pnasnet_192(nn.Module):
                            in_channels_right=1080, out_channels_right=216)
         self.cell_3 = Cell(in_channels_left=1080, out_channels_left=216,
                            in_channels_right=1080, out_channels_right=216)
-        self.cell_4 = Cell(in_channels_left=1080, out_channels_left=432,
-                           in_channels_right=1080, out_channels_right=432,
-                           is_reduction=True, zero_pad=True)
-        self.cell_5 = Cell(in_channels_left=1080, out_channels_left=432,
-                           in_channels_right=2160, out_channels_right=432,
-                           match_prev_layer_dimensions=True)
-        self.cell_6 = Cell(in_channels_left=2160, out_channels_left=432,
-                           in_channels_right=2160, out_channels_right=432)
+
         # classifier
         self.relu = nn.ReLU()
-        self.avg_pool = nn.AvgPool2d(12, stride=1, padding=0)
+        self.avg_pool = nn.AvgPool2d(12, stride=12, padding=0)
         self.dropout = nn.Dropout(0.5)
         self.classifier = nn.Sequential(
-            nn.Linear(2160, 100), nn.LeakyReLU(0.2, True), nn.Linear(100, 1))
+            nn.Linear(4320, 100), nn.LeakyReLU(0.2, True), nn.Linear(100, 1))
 
     def forward(self, x):
         x_conv_0 = self.conv_0(x)
@@ -321,11 +314,11 @@ class Discriminator_Pnasnet_192(nn.Module):
         x_cell_1 = self.cell_1(x_stem_1, x_cell_0)
         x_cell_2 = self.cell_2(x_cell_0, x_cell_1)
         x_cell_3 = self.cell_3(x_cell_1, x_cell_2)
-        x_cell_4 = self.model.cell_4(x_cell_2, x_cell_3)
-        x_cell_5 = self.model.cell_5(x_cell_3, x_cell_4)
-        x_cell_6 = self.model.cell_6(x_cell_4, x_cell_5)
+        #x_cell_4 = self.model.cell_4(x_cell_2, x_cell_3)
+        #x_cell_5 = self.model.cell_5(x_cell_3, x_cell_4)
+        #x_cell_6 = self.model.cell_6(x_cell_4, x_cell_5)
 
-        x = self.relu(x_cell_6)
+        x = self.relu(x_cell_3)
         x = self.avg_pool(x)
         x = x.view(x.size(0), -1)
         x = self.dropout(x)
