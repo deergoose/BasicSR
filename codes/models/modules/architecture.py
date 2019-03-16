@@ -6,7 +6,7 @@ import torchvision
 from . import block as B
 from . import spectral_norm as SN
 
-import pretrainedmodels.models.pnasnet as pnasnet
+from pretrainedmodels.models.pnasnet import CellStem0, Cell
 
 ####################
 # Generator
@@ -276,7 +276,26 @@ class Discriminator_Pnasnet_192(nn.Module):
     def __init__(self,):
         super(Discriminator_Pnasnet_192, self).__init__()
         # features
-        self.model = pnasnet.PNASNet5Large(num_classes=1001)
+        self.conv_0 = nn.Sequential(OrderedDict([
+            ('conv', nn.Conv2d(3, 96, kernel_size=3, stride=2, bias=False)),
+            ('bn', nn.BatchNorm2d(96, eps=0.001))
+        ]))
+        self.cell_stem_0 = CellStem0(in_channels_left=96, out_channels_left=54,
+                                     in_channels_right=96,
+                                     out_channels_right=54)
+        self.cell_stem_1 = Cell(in_channels_left=96, out_channels_left=108,
+                                in_channels_right=270, out_channels_right=108,
+                                match_prev_layer_dimensions=True,
+                                is_reduction=True)
+        self.cell_0 = Cell(in_channels_left=270, out_channels_left=216,
+                           in_channels_right=540, out_channels_right=216,
+                           match_prev_layer_dimensions=True)
+        self.cell_1 = Cell(in_channels_left=540, out_channels_left=216,
+                           in_channels_right=1080, out_channels_right=216)
+        self.cell_2 = Cell(in_channels_left=1080, out_channels_left=216,
+                           in_channels_right=1080, out_channels_right=216)
+        self.cell_3 = Cell(in_channels_left=1080, out_channels_left=216,
+                           in_channels_right=1080, out_channels_right=216)
         # classifier
         self.relu = nn.ReLU()
         self.avg_pool = nn.AvgPool2d(12, stride=12, padding=0)
@@ -285,13 +304,13 @@ class Discriminator_Pnasnet_192(nn.Module):
             nn.Linear(4320, 100), nn.LeakyReLU(0.2, True), nn.Linear(100, 1))
 
     def forward(self, x):
-        x_conv_0 = self.model.conv_0(x)
-        x_stem_0 = self.model.cell_stem_0(x_conv_0)
-        x_stem_1 = self.model.cell_stem_1(x_conv_0, x_stem_0)
-        x_cell_0 = self.model.cell_0(x_stem_0, x_stem_1)
-        x_cell_1 = self.model.cell_1(x_stem_1, x_cell_0)
-        x_cell_2 = self.model.cell_2(x_cell_0, x_cell_1)
-        x_cell_3 = self.model.cell_3(x_cell_1, x_cell_2)
+        x_conv_0 = self.conv_0(x)
+        x_stem_0 = self.cell_stem_0(x_conv_0)
+        x_stem_1 = self.cell_stem_1(x_conv_0, x_stem_0)
+        x_cell_0 = self.cell_0(x_stem_0, x_stem_1)
+        x_cell_1 = self.cell_1(x_stem_1, x_cell_0)
+        x_cell_2 = self.cell_2(x_cell_0, x_cell_1)
+        x_cell_3 = self.cell_3(x_cell_1, x_cell_2)
         #x_cell_4 = self.model.cell_4(x_cell_2, x_cell_3)
         #x_cell_5 = self.model.cell_5(x_cell_3, x_cell_4)
         #x_cell_6 = self.model.cell_6(x_cell_4, x_cell_5)
