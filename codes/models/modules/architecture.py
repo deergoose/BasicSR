@@ -279,10 +279,10 @@ class Discriminator_Pnasnet_192(nn.Module):
         self.model = pnasnet.PNASNet5Large(num_classes=1001)
         # classifier
         self.relu = nn.ReLU()
-        self.avg_pool = nn.AvgPool2d(12, stride=1, padding=0)
+        self.avg_pool = nn.AvgPool2d(12, stride=12, padding=0)
         self.dropout = nn.Dropout(0.5)
         self.classifier = nn.Sequential(
-            nn.Linear(2160, 100), nn.LeakyReLU(0.2, True), nn.Linear(100, 1))
+            nn.Linear(4320, 100), nn.LeakyReLU(0.2, True), nn.Linear(100, 1))
 
     def forward(self, x):
         x_conv_0 = self.model.conv_0(x)
@@ -292,11 +292,11 @@ class Discriminator_Pnasnet_192(nn.Module):
         x_cell_1 = self.model.cell_1(x_stem_1, x_cell_0)
         x_cell_2 = self.model.cell_2(x_cell_0, x_cell_1)
         x_cell_3 = self.model.cell_3(x_cell_1, x_cell_2)
-        x_cell_4 = self.model.cell_4(x_cell_2, x_cell_3)
-        x_cell_5 = self.model.cell_5(x_cell_3, x_cell_4)
-        x_cell_6 = self.model.cell_6(x_cell_4, x_cell_5)
+        #x_cell_4 = self.model.cell_4(x_cell_2, x_cell_3)
+        #x_cell_5 = self.model.cell_5(x_cell_3, x_cell_4)
+        #x_cell_6 = self.model.cell_6(x_cell_4, x_cell_5)
 
-        x = self.relu(x_cell_6)
+        x = self.relu(x_cell_3)
         x = self.avg_pool(x)
         x = x.view(x.size(0), -1)
         x = self.dropout(x)

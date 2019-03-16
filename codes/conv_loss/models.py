@@ -46,15 +46,15 @@ def pnasnet_features(self, x):
     x_cell_1 = self.cell_1(x_stem_1, x_cell_0)
     x_cell_2 = self.cell_2(x_cell_0, x_cell_1)
     x_cell_3 = self.cell_3(x_cell_1, x_cell_2)
-    x_cell_4 = self.cell_4(x_cell_2, x_cell_3)
-    x_cell_5 = self.cell_5(x_cell_3, x_cell_4)
-    x_cell_6 = self.cell_6(x_cell_4, x_cell_5)
-    x_cell_7 = self.cell_7(x_cell_5, x_cell_6)
-    x_cell_8 = self.cell_8(x_cell_6, x_cell_7)
-    x_cell_9 = self.cell_9(x_cell_7, x_cell_8)
-    x_cell_10 = self.cell_10(x_cell_8, x_cell_9)
-    x_cell_11 = self.cell_11(x_cell_9, x_cell_10)
-    return x_cell_11
+    #x_cell_4 = self.cell_4(x_cell_2, x_cell_3)
+    #x_cell_5 = self.cell_5(x_cell_3, x_cell_4)
+    #x_cell_6 = self.cell_6(x_cell_4, x_cell_5)
+    #x_cell_7 = self.cell_7(x_cell_5, x_cell_6)
+    #x_cell_8 = self.cell_8(x_cell_6, x_cell_7)
+    #x_cell_9 = self.cell_9(x_cell_7, x_cell_8)
+    #x_cell_10 = self.cell_10(x_cell_8, x_cell_9)
+    #x_cell_11 = self.cell_11(x_cell_9, x_cell_10)
+    return x_cell_3
 
 pnasnet.PNASNet5Large.features = pnasnet_features
 
@@ -78,9 +78,11 @@ class PNasNetFeatureExtractor(nn.Module):
         # No need to BP to variable
         for k, v in self.model.named_parameters():
             v.requires_grad = False
+        self.avg_pool = nn.AvgPool2d(12, stride=12, padding=0)
 
     def forward(self, x):
         if self.use_input_norm:
             x = (x - self.mean) / self.std
         output = self.features(x)
+        output = self.avg_pool(output)
         return output
