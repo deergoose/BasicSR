@@ -131,6 +131,8 @@ def define_D(opt):
             norm_type=opt_net['norm_type'], mode=opt_net['mode'], act_type=opt_net['act_type'])
     elif which_model == 'discriminator_vgg_128_SN':
         netD = arch.Discriminator_VGG_128_SN()
+    elif which_model == 'discriminator_pnasnet_192':
+        netD = arch.Discriminator_Pnasnet_192()
     else:
         raise NotImplementedError('Discriminator model [{:s}] not recognized'.format(which_model))
 

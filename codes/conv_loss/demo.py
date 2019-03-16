@@ -61,7 +61,7 @@ def denormalize(im):
 
 def read_im(im_dir, im_name):
     im = cv2.imread(os.path.join(im_dir, im_name))
-    #im = im[:128, :128, :]
+    im = im[:192, :192, :]
     im = normalize(im.astype(np.float) / 255.0 * 2100)
     im = im[np.newaxis, ...]
     return torch.from_numpy(np.ascontiguousarray(
@@ -89,6 +89,7 @@ def main():
     print real_feat.shape
     print 'sum: ', np.sum(feat_diff)
 
+"""
     for i in range(real_feat.shape[2]):
         im_real_feat = cv2.normalize(
             real_feat[..., i], None, 0, 255,
@@ -105,7 +106,7 @@ def main():
         cv2.imshow('fake', im_fake_feat)
         cv2.imshow('diff', im_feat_diff)
         cv2.waitKey()
-
+"""
 
 if __name__ == '__main__':
     main()
