@@ -43,7 +43,7 @@ class SRGANModel(BaseModel):
                 self.cri_pix = None
 
             # G feature loss
-            if train_opt['feature_weight'] > 0:
+            if 'feature_weight' in train_opt and train_opt['feature_weight'] > 0:
                 l_fea_type = train_opt['feature_criterion']
                 if l_fea_type == 'l1':
                     self.cri_fea = nn.L1Loss().to(self.device)
