@@ -53,12 +53,23 @@ class DstlDataset(data.Dataset):
         self.scale = opt['scale']
         self.patch_size = opt['HR_size']
         self.total_imgs = len(self.data_names)
-
+        self.cached_image_data = None
+        self.counter = 0
 
     def __getitem__(self, index):
-        np.random.seed(index)
-        data_id = self.data_names[np.random.randint(self.total_imgs)]
-        image_data = ImageData(self.data_dir, data_id, grid_sizes=None, train_wkt_v4=None)
+        # Try to use cache.
+        if self.cached_image_data is not None:
+            image_data = self.cached_image_data
+            self.counter -= 1
+            if self.counter == 0:
+                self.cached_image_data = None
+        else:
+            np.random.seed(index)
+            data_id = self.data_names[np.random.randint(self.total_imgs)]
+            image_data = ImageData(self.data_dir, data_id, grid_sizes=None, train_wkt_v4=None)
+            self.cached_image_data = image_data
+            self.counter == 2
+
         image_data.create_train_feature()
         image = image_data.train_feature[:_y_crop, :_x_crop, :]
         image = image.astype(np.float)
