@@ -56,7 +56,12 @@ class RRDBNet(nn.Module):
         if upscale == 3:
             n_upscale = 1
 
-        fea_conv = B.conv_block(in_nc, nf, kernel_size=3, norm_type=None, act_type=None)
+        self.feat_conv = B.conv_block(in_nc, nf-32, kernel_size=3, norm_type=None, act_type=None)
+        self.feat_conv_dilate_2 = B.conv_block(in_nc, 16, kernel_size=3, norm_type=None,
+            act_type=None, dilation=2)
+        self.feat_conv_dilate_4 = B.conv_block(in_nc, 16, kernel_size=3, norm_type=None,
+            act_type=None, dilation=4)
+
         rb_blocks = [B.RRDB(nf, kernel_size=3, gc=32, stride=1, bias=True, pad_type='zero', \
             norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb)]
         LR_conv = B.conv_block(nf, nf, kernel_size=3, norm_type=norm_type, act_type=None, mode=mode)
@@ -74,11 +79,15 @@ class RRDBNet(nn.Module):
         HR_conv0 = B.conv_block(nf, nf, kernel_size=3, norm_type=None, act_type=act_type)
         HR_conv1 = B.conv_block(nf, out_nc, kernel_size=3, norm_type=None, act_type=None)
 
-        self.model = B.sequential(fea_conv, B.ShortcutBlock(B.sequential(*rb_blocks, LR_conv)),\
+        self.model = B.sequential(B.ShortcutBlock(B.sequential(*rb_blocks, LR_conv)),\
             *upsampler, HR_conv0, HR_conv1)
 
     def forward(self, x):
-        x = self.model(x)
+        feat_dilate_1 = self.feat_conv(x)
+        feat_dilate_2 = self.feat_conv_dilate_2(x)
+        feat_dilate_4 = self.feat_conv_dilate_4(x)
+        feat = torch.cat([feat_dilate_1, feat_dilate_2, feat_dilate_4], dim=1)
+        x = self.model(feat)
         return x
 
 
