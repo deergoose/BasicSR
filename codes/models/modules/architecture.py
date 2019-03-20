@@ -131,9 +131,9 @@ class RRDBNet(nn.Module):
             n_upscale = 1
 
         self.feat_conv = B.conv_block(in_nc, nf, kernel_size=3, norm_type=None, act_type=None)
-        self.feat_conv_dilate_2 = B.conv_block(in_nc, nf/2, kernel_size=3, norm_type=None,
+        self.feat_conv_dilate_2 = B.conv_block(in_nc, int(nf/2), kernel_size=3, norm_type=None,
             act_type=None, dilation=2)
-        self.feat_conv_dilate_4 = B.conv_block(in_nc, nf/2, kernel_size=3, norm_type=None,
+        self.feat_conv_dilate_4 = B.conv_block(in_nc, int(nf/2), kernel_size=3, norm_type=None,
             act_type=None, dilation=4)
 
         rb_blocks = [B.RRDB(nf*2, kernel_size=3, gc=32, stride=1, bias=True, pad_type='zero', \
