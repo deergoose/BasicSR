@@ -47,8 +47,40 @@ class SRResNet(nn.Module):
         x = self.model(x)
         return x
 
+class RRDBNet_original(nn.Module):
+    def __init__(self, in_nc, out_nc, nf, nb, gc=32, upscale=4, norm_type=None, \
+            act_type='leakyrelu', mode='CNA', upsample_mode='upconv'):
+        super(RRDBNet, self).__init__()
+        n_upscale = int(math.log(upscale, 2))
+        if upscale == 3:
+            n_upscale = 1
 
-class RRDBNet(nn.Module):
+        fea_conv = B.conv_block(in_nc, nf, kernel_size=3, norm_type=None, act_type=None)
+        rb_blocks = [B.RRDB(nf, kernel_size=3, gc=32, stride=1, bias=True, pad_type='zero', \
+            norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb)]
+        LR_conv = B.conv_block(nf, nf, kernel_size=3, norm_type=norm_type, act_type=None, mode=mode)
+
+        if upsample_mode == 'upconv':
+            upsample_block = B.upconv_blcok
+        elif upsample_mode == 'pixelshuffle':
+            upsample_block = B.pixelshuffle_block
+        else:
+            raise NotImplementedError('upsample mode [{:s}] is not found'.format(upsample_mode))
+        if upscale == 3:
+            upsampler = upsample_block(nf, nf, 3, act_type=act_type)
+        else:
+            upsampler = [upsample_block(nf, nf, act_type=act_type) for _ in range(n_upscale)]
+        HR_conv0 = B.conv_block(nf, nf, kernel_size=3, norm_type=None, act_type=act_type)
+        HR_conv1 = B.conv_block(nf, out_nc, kernel_size=3, norm_type=None, act_type=None)
+
+        self.model = B.sequential(fea_conv, B.ShortcutBlock(B.sequential(*rb_blocks, LR_conv)),\
+            *upsampler, HR_conv0, HR_conv1)
+
+    def forward(self, x):
+        x = self.model(x)
+        return x
+
+class RRDBNet_small(nn.Module):
     def __init__(self, in_nc, out_nc, nf, nb, gc=32, upscale=4, norm_type=None, \
             act_type='leakyrelu', mode='CNA', upsample_mode='upconv'):
         super(RRDBNet, self).__init__()
@@ -90,6 +122,47 @@ class RRDBNet(nn.Module):
         x = self.model(feat)
         return x
 
+class RRDBNet(nn.Module):
+    def __init__(self, in_nc, out_nc, nf, nb, gc=32, upscale=4, norm_type=None, \
+            act_type='leakyrelu', mode='CNA', upsample_mode='upconv'):
+        super(RRDBNet, self).__init__()
+        n_upscale = int(math.log(upscale, 2))
+        if upscale == 3:
+            n_upscale = 1
+
+        self.feat_conv = B.conv_block(in_nc, nf, kernel_size=3, norm_type=None, act_type=None)
+        self.feat_conv_dilate_2 = B.conv_block(in_nc, nf/2, kernel_size=3, norm_type=None,
+            act_type=None, dilation=2)
+        self.feat_conv_dilate_4 = B.conv_block(in_nc, nf/2, kernel_size=3, norm_type=None,
+            act_type=None, dilation=4)
+
+        rb_blocks = [B.RRDB(nf*2, kernel_size=3, gc=32, stride=1, bias=True, pad_type='zero', \
+            norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb)]
+        LR_conv = B.conv_block(nf*2, nf*2, kernel_size=3, norm_type=norm_type, act_type=None, mode=mode)
+
+        if upsample_mode == 'upconv':
+            upsample_block = B.upconv_blcok
+        elif upsample_mode == 'pixelshuffle':
+            upsample_block = B.pixelshuffle_block
+        else:
+            raise NotImplementedError('upsample mode [{:s}] is not found'.format(upsample_mode))
+        if upscale == 3:
+            upsampler = upsample_block(nf*2, nf*2, 3, act_type=act_type)
+        else:
+            upsampler = [upsample_block(nf*2, nf*2, act_type=act_type) for _ in range(n_upscale)]
+        HR_conv0 = B.conv_block(nf*2, nf, kernel_size=3, norm_type=None, act_type=act_type)
+        HR_conv1 = B.conv_block(nf, out_nc, kernel_size=3, norm_type=None, act_type=None)
+
+        self.model = B.sequential(B.ShortcutBlock(B.sequential(*rb_blocks, LR_conv)),\
+            *upsampler, HR_conv0, HR_conv1)
+
+    def forward(self, x):
+        feat_dilate_1 = self.feat_conv(x)
+        feat_dilate_2 = self.feat_conv_dilate_2(x)
+        feat_dilate_4 = self.feat_conv_dilate_4(x)
+        feat = torch.cat([feat_dilate_1, feat_dilate_2, feat_dilate_4], dim=1)
+        x = self.model(feat)
+        return x
 
 ####################
 # Discriminator
