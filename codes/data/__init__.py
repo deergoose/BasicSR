@@ -29,7 +29,7 @@ def create_dataset(dataset_opt):
     elif mode == 'LRHRseg_bg':
         from data.LRHR_seg_bg_dataset import LRHRSeg_BG_Dataset as D
     elif mode == 'dstl':
-        from data.dstl_dataset.dataset import DstlDataset as D
+        from data.dstl_dataset.dataset_png import DstlDataset as D
     else:
         raise NotImplementedError('Dataset [{:s}] is not recognized.'.format(mode))
     dataset = D(dataset_opt)

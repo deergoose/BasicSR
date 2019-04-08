@@ -161,12 +161,8 @@ def define_F(opt, use_bn=False):
             device=device)
     else:
         # pytorch pretrained VGG19-54, before ReLU.
-        if use_bn:
-            feature_layer = 49
-        else:
-            feature_layer = 34
         netF = arch.VGGFeatureExtractor(
-            feature_layer=feature_layer,
+            feature_layer=16,
             use_bn=use_bn,
             use_input_norm=True,
             device=device)

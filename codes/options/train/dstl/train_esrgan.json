@@ -1,36 +1,36 @@
 {
-    "name": "RRDB_ESRGAN_x4_DSTL", //  please remove "debug_" during training
+    "name": "RRDB_ESRGAN_x4_DSTL_atrous", //  please remove "debug_" during training
     "use_tb_logger": true,
     "model": "srragan",
     "scale": 4,
-    "gpu_ids": [0, 1, 2, 3],
-    "pnasnet": true,
+    "gpu_ids": [0],
+    //"pnasnet": true,
     //"unet": true,
     //"unet_model": "../experiments/pretrain_models/unet/CP_170.pth",
     "datasets": {
         "train": {
             "name": "dstl",
             "mode": "dstl",
-            "dataroot_HR": "/workspace/dstl",
+            "dataroot_HR": "/workspace/png",
             "dataroot_LR": null,
             "subset_file": null,
             "use_shuffle": true,
-            "n_workers": 32,
-            "batch_size": 16,
-            "HR_size": 128,
+            "n_workers": 8,
+            "batch_size": 14,
+            "HR_size": 192,
             "use_flip": true,
             "use_rot": true
         },
         "val": {
             "name": "dstl_val",
             "mode": "dstl",
-            "dataroot_HR": "/workspace/dstl",
+            "dataroot_HR": "/workspace/png",
             "dataroot_LR": null
         }
     },
     "path": {
         "root": "/workspace/BasicSR",
-        "pretrain_model_G": "../experiments/pretrain_models/init_models/RRDB_PSNR_x4_100K.pth",
+        "pretrain_model_G": "../experiments/pretrain_models/init_models/100000_G.pth",
         "pretrain_model_D": "../experiments/pretrain_models/init_models/1000_D.pth"
     },
     "network_G": {
@@ -45,7 +45,7 @@
         "group": 1
     },
     "network_D": {
-        "which_model_D": "discriminator_vgg_128",
+        "which_model_D": "discriminator_vgg_192",
         "norm_type": "batch",
         "act_type": "leakyrelu",
         "mode": "CNA",
@@ -60,7 +60,7 @@
         "weight_decay_D": 0,
         "beta1_D": 0.9,
         "lr_scheme": "MultiStepLR",
-        "lr_steps": [20000, 40000, 60000, 80000],
+        "lr_steps": [10000, 20000, 30000, 40000],
         "lr_gamma": 0.5,
         "pixel_criterion": "l1",
         "pixel_weight": 1e-2,
@@ -73,11 +73,11 @@
         //"D_init_iters": 1000,
         // "gp_weigth": 10,
         "manual_seed": 0,
-        "niter": 1e5,
+        "niter": 5e4,
         "val_freq": 5e3
     },
     "logger": {
         "print_freq": 2e2,
-        "save_checkpoint_freq": 5e3
+        "save_checkpoint_freq": 1e4
     }
 }

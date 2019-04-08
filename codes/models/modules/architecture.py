@@ -80,7 +80,7 @@ class RRDBNet_original(nn.Module):
         x = self.model(x)
         return x
 
-class RRDBNet_atrous(nn.Module):
+class RRDBNet(nn.Module):
     def __init__(self, in_nc, out_nc, nf, nb, gc=32, upscale=4, norm_type=None, \
             act_type='leakyrelu', mode='CNA', upsample_mode='upconv'):
         super(RRDBNet, self).__init__()
