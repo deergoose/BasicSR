@@ -4,7 +4,7 @@
     "model": "srragan",
     "scale": 4,
     "gpu_ids": [0, 1, 2, 3],
-    "pnasnet": true,
+    //"pnasnet": true,
     //"unet": true,
     //"unet_model": "../experiments/pretrain_models/unet/CP_170.pth",
     "datasets": {
@@ -15,9 +15,9 @@
             "dataroot_LR": null,
             "subset_file": null,
             "use_shuffle": true,
-            "n_workers": 32,
+            "n_workers": 10,
             "batch_size": 16,
-            "HR_size": 128,
+            "HR_size": 192,
             "use_flip": true,
             "use_rot": true
         },
@@ -45,7 +45,7 @@
         "group": 1
     },
     "network_D": {
-        "which_model_D": "discriminator_vgg_128",
+        "which_model_D": "discriminator_vgg_192",
         "norm_type": "batch",
         "act_type": "leakyrelu",
         "mode": "CNA",

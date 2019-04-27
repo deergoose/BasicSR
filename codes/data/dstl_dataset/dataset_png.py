@@ -37,8 +37,8 @@ class DstlDataset(data.Dataset):
         self.data_dir = opt['dataroot_HR']
         all_data_names = glob(os.path.join(self.data_dir, '*.png'))
         all_data_names.sort()
-        self.data_names = [all_data_names[i] for i in _train_ids] \
-            if opt['phase'] == 'train' else [all_data_names[i] for i in _val_ids]
+        self.data_names = all_data_names #[all_data_names[i] for i in _train_ids] \
+            #if opt['phase'] == 'train' else [all_data_names[i] for i in _val_ids]
 
         self.scale = opt['scale']
         self.patch_size = opt['HR_size']

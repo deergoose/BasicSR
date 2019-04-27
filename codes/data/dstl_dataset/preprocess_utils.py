@@ -71,9 +71,10 @@ def blur(img, scale):
     return img
 
 
-def downsample(img, scale):
+def downsample(img, scale, kernel=(5,5)):
     assert len(img.shape) == 3
-    return cv2.resize(img, None, fx=1./scale, fy=1./scale, interpolation=cv2.INTER_CUBIC)
+    img = cv2.resize(img, None, fx=1./scale, fy=1./scale, interpolation=cv2.INTER_CUBIC)
+    return cv2.GaussianBlur(img, kernel, 0)
 
 
 # img = [h, w, c], label = [h, w, c]
